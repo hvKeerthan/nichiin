@@ -46,8 +46,13 @@ public class CsvDownloadService {
                         continue;
                     }
 
+                    Nikkei225PAFPriceId id = new Nikkei225PAFPriceId(record[0], record[1]);
+                    if (repository.existsById(id)) {
+                        continue;
+                    }
+
                     Nikkei225PAFPrice entity = Nikkei225PAFPrice.builder()
-                            .id(new Nikkei225PAFPriceId(record[0], record[1]))
+                            .id(id)
                             .code_name(record[2])
                             .paf(record[3])
                             .classification(record[4])
@@ -61,4 +66,5 @@ public class CsvDownloadService {
             e.printStackTrace();
         }
     }
+
 }
