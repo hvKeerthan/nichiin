@@ -1,5 +1,5 @@
 package com.nichi.nikkie.configuration;
-
+import com.nichi.nikkie.configuration.XMLMapperConfiguration;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +14,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class SeleniumConfiguration {
-
-
+    private final XMLMapperConfiguration xmlMapperConfiguration;
+//    private final ChromeDriver driver;
 
     @Bean
     public ChromeDriver driver() {
 
-
         Map<String, Object> prefs = new HashMap<>();
-
+        prefs.put("download.prompt_for_download", false);
         prefs.put("safebrowsing.enabled", true);
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");

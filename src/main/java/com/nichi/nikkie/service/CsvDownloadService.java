@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -57,6 +59,8 @@ public class CsvDownloadService {
                             .paf(record[3])
                             .classification(record[4])
                             .sector(record[5])
+                            .updatesource("etfpcfscript")
+                            .updatetime(updateTimestamp())
                             .build();
 
                     repository.save(entity);
@@ -65,6 +69,13 @@ public class CsvDownloadService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public String updateTimestamp() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
+    }
+
+    public List<Nikkei225PAFPrice> getSortedStockData() {
+        return repository.findAllSortedByCode();
     }
 
 }
