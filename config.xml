@@ -1,10 +1,11 @@
 <config>
     <values>
         <url>jdbc:postgresql://localhost:5432/nikkie</url>
-        <username>keerthan</username>
-        <password>keerthan</password>
+        <username>keerthanhv</username>
+        <password>nichi-in</password>
         <driver-class-name>org.postgresql.Driver</driver-class-name>
         <hibernate-dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate-dialect>
         <ddl-auto>update</ddl-auto>
+        <divisor>30.06422294</divisor>
     </values>
 </config>
