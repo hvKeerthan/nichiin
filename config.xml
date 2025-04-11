@@ -1,11 +1,25 @@
 <config>
     <values>
         <url>jdbc:postgresql://localhost:5432/nikkie</url>
-        <username>keerthanhv</username>
-        <password>nichi-in</password>
+        <username>keerthan</username>
+        <password>keerthan</password>
         <driver-class-name>org.postgresql.Driver</driver-class-name>
         <hibernate-dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate-dialect>
         <ddl-auto>update</ddl-auto>
         <divisor>30.06422294</divisor>
+        <mail-host>smtp.gmail.com</mail-host>
+        <mail-port>587</mail-port>
+        <mail-username>keerthan.nis21b@gmail.com</mail-username>
+        <mail-password>irmx qqim lrgo jmdy</mail-password>
+        <mail-protocol>smtp</mail-protocol>
+        <mail-auth>true</mail-auth>
+        <mail-enable>true</mail-enable>
+        <mail-to>keerthan.hv@nichi.com</mail-to>
+        <mail-cc>raveendra@nichi.com, pavan.p@nichi.com, tanush.kn@nichi.com, manivannan.p@nichi.com</mail-cc>
+        <mail-sub>Conformation mail regarding CSV file download</mail-sub>
+        <mail-success-content>The program successfully downloaded the CSV file and processed the data into the database.</mail-success-content>
+        <mail-error-content>Program Failed to download csv from website</mail-error-content>
+        <mail-dberror-content>Program Failed to update the data into database</mail-dberror-content>
+
     </values>
 </config>

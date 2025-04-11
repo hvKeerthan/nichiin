@@ -2,6 +2,7 @@ package com.nichi.nikkie.service;
 
 import com.nichi.nikkie.entity.Nikkei225PAFPrice;
 import com.nichi.nikkie.entity.Nikkei225PAFPriceId;
+import com.nichi.nikkie.mail.MailContent;
 import com.nichi.nikkie.repository.Nikkei225PAFPriceRepository;
 import com.opencsv.CSVReader;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,13 @@ import java.util.List;
 public class CsvDownloadService {
 
     private final Nikkei225PAFPriceRepository repository;
+    private final MailContent mailContent;
 
     private static final String CSV_URL = "https://indexes.nikkei.co.jp/nkave/archives/file/nikkei_225_price_adjustment_factor_en.csv";
 
-    public CsvDownloadService(Nikkei225PAFPriceRepository repository) {
+    public CsvDownloadService(Nikkei225PAFPriceRepository repository, MailContent mailContent) {
         this.repository = repository;
+        this.mailContent = mailContent;
     }
 
 
@@ -67,6 +70,7 @@ public class CsvDownloadService {
                 }
             }
         } catch (Exception e) {
+            mailContent.sendDownloadFailedMail();
             e.printStackTrace();
         }
     }

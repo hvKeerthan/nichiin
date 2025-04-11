@@ -29,15 +29,6 @@ public class NikkeiScraperService {
     private static final Logger logger = Logger.getLogger(NikkeiScraperService.class.getName());
     String configFile = System.getProperty("config.xml");
 
-    static {
-        try {
-            FileHandler fileHandler = new FileHandler("nikkei_backend.log", true); // append mode
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private final Nikkei225PAFPriceRepository nikkei225PAFPriceRepository;
     private final ChromeDriver driver;
