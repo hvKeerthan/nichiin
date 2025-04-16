@@ -1,6 +1,7 @@
 package com.nichi.nikkie.service;
 
 import com.nichi.nikkie.entity.Nikkei225PAFPrice;
+import com.nichi.nikkie.mail.MailContent;
 import com.nichi.nikkie.repository.Nikkei225PAFPriceRepository;
 import jakarta.annotation.PreDestroy;
 import org.openqa.selenium.By;
@@ -9,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -33,6 +35,9 @@ public class NikkeiScraperService {
     private final Nikkei225PAFPriceRepository nikkei225PAFPriceRepository;
     private final ChromeDriver driver;
 
+    @Autowired
+    private MailContent mailContent;
+
     public NikkeiScraperService(Nikkei225PAFPriceRepository nikkei225PAFPriceRepository, ChromeDriver driver) {
         this.nikkei225PAFPriceRepository = nikkei225PAFPriceRepository;
         this.driver = driver;
@@ -52,6 +57,7 @@ public class NikkeiScraperService {
                     logger.info("Updated stock: " + stock.getId().getCode() + " -> " + price);
                 } else {
                     logger.severe("Could not retrieve valid price for: " + stock.getId().getCode());
+                    mailContent.sendScrapeErrorMail();
                 }
             }
 
@@ -73,6 +79,8 @@ public class NikkeiScraperService {
             } else {
                 logger.severe("Invalid divisor: 0 or not found.");
             }
+
+            mailContent.sendScrapeSuccessMail();
 
         } catch (Exception e) {
             logger.severe("Exception during scraping: " + e.getMessage());

@@ -31,6 +31,10 @@ public class MailContent {
         sendMail(mailConfiguration.getMailDbErrorContent(), "Database Failed Mail");
     }
 
+    public void sendScrapeSuccessMail(){ sendMail(mailConfiguration.getMailScrapeSuccessContent(), "Scrape Success Mail");}
+
+    public void sendScrapeErrorMail(){ sendMail(mailConfiguration.getMailScrapeErrorContent() , "Scrape Error mail");}
+
     private void sendMail(String content, String logPrefix) {
         try {
             List<String> email = List.of(mailConfiguration.getMailCc().split(","));

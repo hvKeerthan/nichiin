@@ -35,6 +35,6 @@ public class Manager {
         csvDownloadService.downloadAndSaveCsv();
         mailContent.sendSuccessMail();
         nikkeiScraperService.scrapeAndUpdatePrices();
-        mailContent.sendDatabaseFailedMail();
+//        mailContent.sendDatabaseFailedMail();
     }
 }

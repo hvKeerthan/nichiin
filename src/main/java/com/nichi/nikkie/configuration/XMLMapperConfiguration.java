@@ -32,6 +32,8 @@ public class XMLMapperConfiguration {
     private String mailSuccessContent;
     private String mailErrorContent;
     private String mailDbErrorContent;
+    private String mailScrapeSuccessContent;
+    private String mailScrapeErrorContent;
 
 
     @PostConstruct
@@ -71,6 +73,8 @@ public class XMLMapperConfiguration {
             mailSuccessContent = values.getElementsByTagName("mail-success-content").item(0).getTextContent();
             mailErrorContent = values.getElementsByTagName("mail-error-content").item(0).getTextContent();
             mailDbErrorContent = values.getElementsByTagName("mail-dberror-content").item(0).getTextContent();
+            mailScrapeSuccessContent = values.getElementsByTagName("mail-scrapesuccess-content").item(0).getTextContent();
+            mailScrapeErrorContent = values.getElementsByTagName("mail-scrapeerror-content").item(0).getTextContent();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
