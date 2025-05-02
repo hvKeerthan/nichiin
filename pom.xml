@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.nichi</groupId>
 	<artifactId>nikkie</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-Test</version>
 	<name>nikkie</name>
 	<description>Java based project</description>
 	<url/>
@@ -31,10 +31,6 @@
 	</properties>
 	<dependencies>
 
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-web</artifactId>-->
-<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -95,6 +91,12 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -111,6 +113,20 @@
 					</excludes>
 				</configuration>
 			</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.1.0</version>
+					<configuration>
+						<archive>
+							<manifestEntries>
+								<Main-Class>com.nichi.nikkie.utils.Nikkei225PafPriceDataTransfer</Main-Class>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
+
+
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -122,5 +138,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
 
 </project>

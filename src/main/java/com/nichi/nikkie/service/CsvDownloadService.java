@@ -8,8 +8,7 @@ import com.opencsv.CSVReader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -28,7 +27,6 @@ public class CsvDownloadService {
         this.repository = repository;
         this.mailContent = mailContent;
     }
-
 
     @Transactional
     public void downloadAndSaveCsv() {
@@ -74,6 +72,30 @@ public class CsvDownloadService {
             e.printStackTrace();
         }
     }
+
+    public File downloadCsvToFile(String destinationPath) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(CSV_URL).openConnection();
+            connection.setRequestMethod("GET");
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                 FileWriter writer = new FileWriter(destinationPath)) {
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    writer.write(line + "\n");
+                }
+
+                System.out.println("✅ CSV downloaded to " + destinationPath);
+                return new File(destinationPath);
+            }
+        } catch (Exception e) {
+            mailContent.sendDownloadFailedMail();
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public String updateTimestamp() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss"));
     }

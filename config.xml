@@ -19,7 +19,6 @@
         <mail-sub>Confirmation mail regarding NK225 Constituents PAF and Price download</mail-sub>
         <mail-success-content>The program successfully downloaded the CSV file and processed the data into the database.</mail-success-content>
         <mail-error-content>Program Failed to download csv from website</mail-error-content>
-        <mail-dberror-content>Program Failed to update the data into database</mail-dberror-content>
         <mail-scrapesuccess-content>Program successfully scraped the price values from the directed website</mail-scrapesuccess-content>
         <mail-scrapeerror-content><![CDATA[There was an error while processing data.
                                     Please refer log file for more details and fix.]]></mail-scrapeerror-content>

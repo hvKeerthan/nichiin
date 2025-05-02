@@ -28,13 +28,13 @@ public class Manager {
 
     @PostConstruct
     public void run() throws InterruptedException {
-        Thread.sleep(1000);
-        repository.deleteAll();
-        log.info("Deleted all existing records from the database.");
-        Thread.sleep(3000);
-        csvDownloadService.downloadAndSaveCsv();
-        mailContent.sendSuccessMail();
-        nikkeiScraperService.scrapeAndUpdatePrices();
-//        mailContent.sendDatabaseFailedMail();
+            Thread.sleep(1000);
+            repository.deleteAll();
+            log.info("Deleted all existing records from the database.");
+            Thread.sleep(3000);
+            csvDownloadService.downloadAndSaveCsv();
+            mailContent.sendSuccessMail();
+            nikkeiScraperService.scrapeAndUpdatePrices();
+
     }
 }

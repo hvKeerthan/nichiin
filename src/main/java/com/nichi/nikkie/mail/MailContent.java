@@ -42,7 +42,7 @@ public class MailContent {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setTo(mailConfiguration.getMailTo());
-            helper.setCc(email.toArray(new String[0]));
+//            helper.setCc(email.toArray(new String[0]));
             helper.setSubject(mailConfiguration.getMailSub());
             helper.setText(content);
 

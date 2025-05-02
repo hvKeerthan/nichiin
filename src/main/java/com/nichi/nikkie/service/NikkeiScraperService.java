@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -47,6 +48,7 @@ public class NikkeiScraperService {
         logger.info("Starting data scraping...");
 
         List<Nikkei225PAFPrice> stockCodes = nikkei225PAFPriceRepository.findAll();
+        List<String> failedCodes = new ArrayList<>();
 
         try {
             for (Nikkei225PAFPrice stock : stockCodes) {
@@ -56,37 +58,61 @@ public class NikkeiScraperService {
                     nikkei225PAFPriceRepository.save(stock);
                     logger.info("Updated stock: " + stock.getId().getCode() + " -> " + price);
                 } else {
-                    logger.severe("Could not retrieve valid price for: " + stock.getId().getCode());
-                    mailContent.sendScrapeErrorMail();
+                    logger.warning("Initial scrape failed for: " + stock.getId().getCode());
+                    failedCodes.add(stock.getId().getCode());
                 }
             }
 
-            logger.info("Scraping completed.");
 
-
-            double adjustedPrice = stockCodes.stream()
-                    .filter(s -> s.getPrice() != null && s.getPaf() != null && !s.getPaf().isEmpty())
-                    .mapToDouble(s -> s.getPrice() * Double.parseDouble(s.getPaf()))
-                    .sum();
-
-            double divisor = loadDivisorFromXML();
-
-            if (divisor > 0) {
-                double nikkei225Price = adjustedPrice / divisor;
-                logger.info("===============================================================");
-                logger.info(String.format("Adjusted Price: %.2f    Nikkei 225 Price: %.2f", adjustedPrice, nikkei225Price));
-                logger.info("===============================================================\n");
-            } else {
-                logger.severe("Invalid divisor: 0 or not found.");
+            if (!failedCodes.isEmpty()) {
+                logger.info("Retrying failed stock codes...");
+                for (String code : new ArrayList<>(failedCodes)) {
+                    double retryPrice = scrapeStockPrice(code);
+                    if (retryPrice > 0) {
+                        Nikkei225PAFPrice stock = stockCodes.stream()
+                                .filter(s -> s.getId().getCode().equals(code))
+                                .findFirst()
+                                .orElse(null);
+                        if (stock != null) {
+                            stock.setPrice(retryPrice);
+                            nikkei225PAFPriceRepository.save(stock);
+                            logger.info("Retry succeeded for: " + code + " -> " + retryPrice);
+                            failedCodes.remove(code);
+                        }
+                    } else {
+                        logger.severe("Retry failed for: " + code);
+                    }
+                }
             }
 
-            mailContent.sendScrapeSuccessMail();
+            if (!failedCodes.isEmpty()) {
+                logger.severe("Scraping failed for codes: " + String.join(", ", failedCodes));
+                mailContent.sendScrapeErrorMail();
+            } else {
+                double adjustedPrice = stockCodes.stream()
+                        .filter(s -> s.getPrice() != null && s.getPaf() != null && !s.getPaf().isEmpty())
+                        .mapToDouble(s -> s.getPrice() * Double.parseDouble(s.getPaf()))
+                        .sum();
+
+                double divisor = loadDivisorFromXML();
+                if (divisor > 0) {
+                    double nikkei225Price = adjustedPrice / divisor;
+                    logger.info("===============================================================");
+                    logger.info(String.format("Adjusted Price: %.2f    Nikkei 225 Price: %.2f", adjustedPrice, nikkei225Price));
+                    logger.info("===============================================================\n");
+                } else {
+                    logger.severe("Invalid divisor: 0 or not found.");
+                }
+
+                mailContent.sendScrapeSuccessMail();
+            }
 
         } catch (Exception e) {
             logger.severe("Exception during scraping: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
 
     private double scrapeStockPrice(String stockCode) {
         String stockUrl = BASE_URL + stockCode + ".T";
